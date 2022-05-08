@@ -1,3 +1,5 @@
+import './assets/style/styles.css';
+
 let container = document.createElement('div');
 container.className = 'container';
 document.body.prepend(container);

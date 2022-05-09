@@ -191,7 +191,7 @@ const manageSpecialKey = (key, textarea) => {
 
 
 function activeMouse() {
-    keys.forEach(item => item.addEventListener('mousedown', (event) => {
+    keys.forEach(item => item.addEventListener('mousedown', () => {
         item.classList.add('active');
         if (!specialKey.includes(item))
             textArea.value += item.innerHTML;
@@ -202,7 +202,7 @@ function activeMouse() {
         textArea.focus();
     }));
 
-    keys.forEach(item => item.addEventListener('keydown', (event) => {
+    keys.forEach(item => item.addEventListener('keydown', () => {
         item.classList.add('active');
         if (!specialKey.includes(item))
             textArea.value += item.innerHTML;
@@ -222,7 +222,7 @@ document.onkeydown = function (event) {
     if (event.code == 'AltLeft') {
         document.onkeyup = function (event) {
             if (event.code == 'ControlLeft') {
-                if (lang = 'en') {
+                if (lang == 'en') {
                     lang = 'ru';
                     let outChars = '';
                     for (let i = 0; i < smallRuKeyList.length; i++) {

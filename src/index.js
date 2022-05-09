@@ -329,3 +329,22 @@ document.addEventListener('click', (event) => {
         activeMouse(); 
     } 
 });
+
+//----------5. Local storage--------
+
+function setLocalStorage() {
+    localStorage.setItem('lang', lang);
+  }
+  window.addEventListener('beforeunload', setLocalStorage);
+  
+  function getLocalStorage() {
+    if (localStorage.getItem('lang')) {
+      lang = localStorage.getItem('lang');
+      if (lang == 'ru') {
+        lang = 'ru';
+      } else {
+        lang == 'en';
+      }
+    }
+  }
+  window.addEventListener('load', getLocalStorage);

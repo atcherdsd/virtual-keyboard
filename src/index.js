@@ -33,9 +33,9 @@ container.append(declarLanguage);
 
 //-----------2. Create init keyboards items---------------
 
-let lang = 'ru';
+let lang = 'en';
 let capslockState = false;
-let shiftState = true;
+let shiftState = false;
 
 let smallEnKeyList = [96, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 61, 8, 
     9, 113, 119, 101, 114, 116, 121, 117, 105, 111, 112, 91, 93, 92, 46,
@@ -64,7 +64,7 @@ let shiftRuKeyList = [1105, 33, 34, 8470, 59, 37, 58, 63, 42, 40, 41, 95, 43, 8,
 let backspace, tab, del, capslock, enter, shiftLeft, arrowUp, shiftRight, 
     ctrlLeft, win, altLeft, space, altRight, arrowLeft, arrowDown, arrowRight, ctrlRight;
 
-document.onkeypress = function(event) {
+document.onkeydown = function(event) {
      console.log(event);
      shiftEnKeyList.push(event.charCode);
      //console.log(shiftEnKeyList);
@@ -93,7 +93,10 @@ function initChars(){
                 : (outChars += '<div class="key">'+ String.fromCharCode(smallRuKeyList[i]).toUpperCase() + '</div>');
     }
     document.querySelector('.body-keyboard').innerHTML = outChars;
-    
+    addElements();
+}
+
+function addElements() {
     backspace = document.querySelector('.key:nth-child(14)');
     backspace.innerHTML = 'Backspace';
     backspace.classList.add('backspace');
@@ -168,35 +171,82 @@ const keys = document.querySelectorAll('.key');
 const specialKey = [backspace, tab, del, capslock, enter, shiftRight, shiftLeft, 
     ctrlRight, ctrlLeft, win, altRight, altLeft];
 
-keys.forEach(item => item.addEventListener('mousedown', (event) => {
-    item.classList.add('active');
-    if (!specialKey.includes(item))
-        textArea.value += item.innerHTML;
-    manageSpecialKey(item, textArea);
-}));
-keys.forEach(item => item.addEventListener('mouseup', () => {
-    item.classList.remove('active');
-    textArea.focus();
-}));
-
-keys.forEach(item => item.addEventListener('keydown', (event) => {
-    item.classList.add('active');
-    textArea.value += item.innerHTML;
-}));
-keys.forEach(item => item.addEventListener('keyup', () => {
-    item.classList.remove('active');
-}));
-
 const manageSpecialKey = (key, textarea) => {
-    if (key.classList.contains('backspace'))
+    if (key.classList.contains('space')) {
+        textarea.setRangeText('', textarea.selectionStart, textarea.selectionEnd);
+        textarea.value += ' ';
+    } else if (key.classList.contains('backspace'))
         textarea.setRangeText('', textarea.selectionStart - 1, textarea.selectionEnd);
     else if (key.classList.contains('del'))
         textarea.setRangeText('', textarea.selectionStart, textarea.selectionEnd + 1);
-    else if (key.classList.contains('enter'))
+    else if (key.classList.contains('enter')) {
+        textarea.setRangeText('', textarea.selectionStart, textarea.selectionEnd);
         textarea.value += '\n';
-    else if (key.classList.contains('tab'))
+    } else if (key.classList.contains('tab'))
         textarea.value += '\t';
     else if (key.classList.contains('capslock'))
         return textarea.value;
     return textarea.value;
+};
+
+
+function activeMouse() {
+    keys.forEach(item => item.addEventListener('mousedown', (event) => {
+        item.classList.add('active');
+        if (!specialKey.includes(item))
+            textArea.value += item.innerHTML;
+        manageSpecialKey(item, textArea);
+    }));
+    keys.forEach(item => item.addEventListener('mouseup', () => {
+        item.classList.remove('active');
+        textArea.focus();
+    }));
+
+    keys.forEach(item => item.addEventListener('keydown', (event) => {
+        item.classList.add('active');
+        if (!specialKey.includes(item))
+            textArea.value += item.innerHTML;
+        manageSpecialKey(item, textArea);
+    }));
+    keys.forEach(item => item.addEventListener('keyup', () => {
+        item.classList.remove('active');
+        textArea.focus();
+    }));
+}
+
+activeMouse();
+
+//----------4. Switch register and language--------
+
+document.onkeydown = function (event) {
+    if (event.code == 'AltLeft') {
+        document.onkeyup = function (event) {
+            if (event.code == 'ControlLeft') {
+                if (lang = 'en') {
+                    lang = 'ru';
+                    let outChars = '';
+                    for (let i = 0; i < smallRuKeyList.length; i++) {
+                        if (i == 14 || i == 29 || i == 42 || i == 55) {
+                            outChars += '<div class="row"></div>';
+                        }
+                        outChars += '<div class="key">'+ String.fromCharCode(smallRuKeyList[i]) + '</div>';
+                    }
+                    document.querySelector('.body-keyboard').innerHTML = outChars;
+                    addElements();
+                    activeMouse();
+                } else {
+                    lang = 'en';
+                    let outChars = '';
+                    for (let i = 0; i < smallEnKeyList.length; i++) {
+                        if (i == 14 || i == 29 || i == 42 || i == 55) {
+                            outChars += '<div class="row"></div>';
+                        }
+                        outChars += '<div class="key">'+ String.fromCharCode(smallEnKeyList[i]) + '</div>';
+                    }
+                    document.querySelector('.body-keyboard').innerHTML = outChars;
+                }
+            }
+        }
+    }
+    
 };

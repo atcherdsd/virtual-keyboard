@@ -64,12 +64,6 @@ let shiftRuKeyList = [1105, 33, 34, 8470, 59, 37, 58, 63, 42, 40, 41, 95, 43, 8,
 let backspace, tab, del, capslock, enter, shiftLeft, arrowUp, shiftRight, 
     ctrlLeft, win, altLeft, space, altRight, arrowLeft, arrowDown, arrowRight, ctrlRight;
 
-document.onkeydown = function(event) {
-     console.log(event);
-     shiftEnKeyList.push(event.charCode);
-     //console.log(shiftEnKeyList);
-}
-
 function initChars(){
     let outChars = '';
     for (let i = 0; i < smallEnKeyList.length; i++) {
@@ -200,7 +194,8 @@ function activeMouse() {
     keys.forEach(item => item.addEventListener('mouseup', () => {
         item.classList.remove('active');
         textArea.focus();
-    }));
+        }    
+    ));
 
     keys.forEach(item => item.addEventListener('keydown', () => {
         item.classList.add('active');
@@ -218,9 +213,9 @@ activeMouse();
 
 //----------4. Switch register and language--------
 
-document.onkeydown = function (event) {
+document.addEventListener('keydown', (event) => {
     if (event.code == 'AltLeft') {
-        document.onkeyup = function (event) {
+        document.onkeyup = (event) => {
             if (event.code == 'ControlLeft') {
                 if (lang == 'en') {
                     lang = 'ru';
@@ -233,7 +228,6 @@ document.onkeydown = function (event) {
                     }
                     document.querySelector('.body-keyboard').innerHTML = outChars;
                     addElements();
-                    activeMouse();
                 } else {
                     lang = 'en';
                     let outChars = '';
@@ -244,9 +238,94 @@ document.onkeydown = function (event) {
                         outChars += '<div class="key">'+ String.fromCharCode(smallEnKeyList[i]) + '</div>';
                     }
                     document.querySelector('.body-keyboard').innerHTML = outChars;
+                    addElements();
+                    
                 }
             }
         }
     }
-    
-};
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.code == 'ShiftLeft') {
+        if (lang == 'en') {
+            let outChars = '';
+            for (let i = 0; i < smallEnKeyList.length; i++) {
+                if (i == 14 || i == 29 || i == 42 || i == 55) {
+                    outChars += '<div class="row"></div>';
+                }
+                outChars += '<div class="key">'+ String.fromCharCode(shiftEnKeyList[i]).toUpperCase() + '</div>';
+            }
+            document.querySelector('.body-keyboard').innerHTML = outChars;
+            addElements();
+            activeMouse();
+        } else {
+            let outChars = '';
+            for (let i = 0; i < smallRuKeyList.length; i++) {
+                if (i == 14 || i == 29 || i == 42 || i == 55) {
+                    outChars += '<div class="row"></div>';
+                }
+                outChars += '<div class="key">'+ String.fromCharCode(shiftRuKeyList[i]).toUpperCase() + '</div>';
+            }
+            document.querySelector('.body-keyboard').innerHTML = outChars;
+            addElements();
+            activeMouse();
+        }
+    }
+});
+document.addEventListener('keyup', (event) => {
+    if (event.code == 'ShiftLeft') {
+        if (lang == 'en') {
+            let outChars = '';
+            for (let i = 0; i < shiftEnKeyList.length; i++) {
+                if (i == 14 || i == 29 || i == 42 || i == 55) {
+                    outChars += '<div class="row"></div>';
+                }
+                outChars += '<div class="key">'+ String.fromCharCode(smallEnKeyList[i]).toLowerCase() + '</div>';
+            }
+            document.querySelector('.body-keyboard').innerHTML = outChars;
+            addElements();
+            activeMouse();
+        } else {
+            let outChars = '';
+            for (let i = 0; i < shiftRuKeyList.length; i++) {
+                if (i == 14 || i == 29 || i == 42 || i == 55) {
+                    outChars += '<div class="row"></div>';
+                }
+                outChars += '<div class="key">'+ String.fromCharCode(smallRuKeyList[i]).toLowerCase() + '</div>';
+            }
+            document.querySelector('.body-keyboard').innerHTML = outChars;
+            addElements();
+            activeMouse();
+        }
+    }
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target == capslock && capslockState == false) {
+        capslockState = true;
+        capslock.classList.add('active');
+        let outChars = '';
+            for (let i = 0; i < smallEnKeyList.length; i++) {
+                if (i == 14 || i == 29 || i == 42 || i == 55) {
+                    outChars += '<div class="row"></div>';
+                }
+                outChars += '<div class="key">'+ String.fromCharCode(smallEnKeyList[i]).toUpperCase() + '</div>';
+            }
+            document.querySelector('.body-keyboard').innerHTML = outChars;
+            addElements();
+            activeMouse(); 
+    } else if (event.target == capslock && capslockState == true) {
+        capslockState = false;
+        let outChars = '';
+        for (let i = 0; i < smallEnKeyList.length; i++) {
+            if (i == 14 || i == 29 || i == 42 || i == 55) {
+                outChars += '<div class="row"></div>';
+            }
+            outChars += '<div class="key">'+ String.fromCharCode(smallEnKeyList[i]) + '</div>';
+        }
+        document.querySelector('.body-keyboard').innerHTML = outChars;
+        addElements();
+        activeMouse(); 
+    } 
+});

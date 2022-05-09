@@ -120,13 +120,15 @@ body {
 }
 
 .key:hover {
-    background: #79aa89;
+    background-color: #79aa89;
 }
 .active {
     border-radius: 50px;
+    background: lawngreen;
+}
+.key.active:hover {
     background-color: lawngreen;
 }
-
 .description-os,
 .declaration-lang {
     text-align: center;
